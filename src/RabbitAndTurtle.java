@@ -43,16 +43,21 @@ public class RabbitAndTurtle {
         turtle.start();
 
         // меняем приоритеты пока потоки выполняются
-        while (rabbit.isAlive() && turtle.isAlive()) {
-            // если один из потоков обгоняет другой, то меняем их приоритеты местами, чтобы отстающий поток догнал опережающий
-            if (rabbit.countMeter > turtle.countMeter) {
-                turtle.setPriority(10);
-                rabbit.setPriority(1);
+        winner(rabbit,turtle);
+    }
 
-            } else if (turtle.countMeter > rabbit.countMeter) {
-                rabbit.setPriority(10);
-                turtle.setPriority(1);
+    public static void winner(AnimalThread win, AnimalThread lose){
+        while (win.isAlive() && lose.isAlive()){
+            // если один из потоков обгоняет другой, то меняем их приоритеты местами, чтобы отстающий поток догнал опережающий
+            if(win.countMeter > lose.countMeter){
+                win.setPriority(1);
+                lose.setPriority(10);
+
+                AnimalThread temp = win;
+                win = lose;
+                lose = temp;
             }
         }
+
     }
 }
